@@ -1,46 +1,88 @@
---DROP VIEW all_in_one_table
+DROP VIEW ALL_IN_ONE_TABLE
 
-CREATE VIEW all_in_one_table as (
-	SELECT DISTINCT employees.emp_no, emp_title_id, titles.title, birth_date, first_name, last_name, sex, hire_date, dept_emp.dept_no, departments.dept_name, salaries.salary FROM employees
-	INNER JOIN salaries ON salaries.emp_no=employees.emp_no
-		INNER JOIN dept_emp ON dept_emp.emp_no=salaries.emp_no
-			INNER JOIN departments ON departments.dept_no=dept_emp.dept_no
-				INNER JOIN titles ON titles.title_id=employees.emp_title_id
-)
+CREATE VIEW ALL_IN_ONE_TABLE AS
+	(SELECT DISTINCT EMPLOYEES.EMP_NO,
+			EMP_TITLE_ID,
+			TITLES.TITLE,
+			BIRTH_DATE,
+			FIRST_NAME,
+			LAST_NAME,
+			SEX,
+			HIRE_DATE,
+			DEPT_EMP.DEPT_NO,
+			DEPARTMENTS.DEPT_NAME,
+			SALARIES.SALARY
+		FROM EMPLOYEES
+		INNER JOIN SALARIES ON SALARIES.EMP_NO = EMPLOYEES.EMP_NO
+		INNER JOIN DEPT_EMP ON DEPT_EMP.EMP_NO = SALARIES.EMP_NO
+		INNER JOIN DEPARTMENTS ON DEPARTMENTS.DEPT_NO = DEPT_EMP.DEPT_NO
+		INNER JOIN TITLES ON TITLES.TITLE_ID = EMPLOYEES.EMP_TITLE_ID) 
 
 -- List the following details of each employee: employee number, last name, first name, sex, and salary.
-SELECT emp_no, last_name, first_name, sex, salary 
-FROM all_in_one_table ORDER BY emp_no
+SELECT EMP_NO,
+	LAST_NAME,
+	FIRST_NAME,
+	SEX,
+	SALARY
+FROM ALL_IN_ONE_TABLE
+ORDER BY EMP_NO 
 
 -- List first name, last name, and hire date for employees who were hired in 1986.
-SELECT DISTINCT first_name, last_name, hire_date 
-FROM all_in_one_table WHERE hire_date>='1986-01-01' and hire_date<'1987-01-01' ORDER BY last_name, first_name
-
+SELECT DISTINCT FIRST_NAME,
+	LAST_NAME,
+	HIRE_DATE
+FROM ALL_IN_ONE_TABLE
+WHERE HIRE_DATE >= '1986-01-01'
+	AND HIRE_DATE < '1987-01-01'
+ORDER BY LAST_NAME,
+	FIRST_NAME 
+	
 -- List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name.
-SELECT DISTINCT dept_emp.dept_no, departments.dept_name, employees.emp_no, last_name, first_name FROM employees
-INNER JOIN salaries ON salaries.emp_no=employees.emp_no
-	INNER JOIN dept_emp ON dept_emp.emp_no=salaries.emp_no
-		INNER JOIN departments ON departments.dept_no=dept_emp.dept_no
-			INNER JOIN titles ON titles.title_id=employees.emp_title_id
-				INNER JOIN dept_manager ON dept_manager.dept_no=dept_emp.dept_no AND dept_manager.emp_no=employees.emp_no
-				
-				
--- List the department of each employee with the following information: employee number, last name, first name, and department name.
-SELECT DISTINCT emp_no, last_name, first_name, dept_name FROM all_in_one_table
+SELECT DISTINCT DEPT_EMP.DEPT_NO, 
+	DEPARTMENTS.DEPT_NAME, 
+	EMPLOYEES.EMP_NO, 
+	LAST_NAME, 
+	FIRST_NAME
+FROM EMPLOYEES
+INNER JOIN SALARIES ON SALARIES.EMP_NO = EMPLOYEES.EMP_NO 
+INNER JOIN DEPT_EMP ON DEPT_EMP.EMP_NO = SALARIES.EMP_NO 
+INNER JOIN DEPARTMENTS ON DEPARTMENTS.DEPT_NO = DEPT_EMP.DEPT_NO 
+INNER JOIN TITLES ON TITLES.TITLE_ID = EMPLOYEES.EMP_TITLE_ID 
+INNER JOIN DEPT_MANAGER ON DEPT_MANAGER.DEPT_NO = DEPT_EMP.DEPT_NO
+AND DEPT_MANAGER.EMP_NO = EMPLOYEES.EMP_NO -- List the department of each employee with the following information: employee number, last name, first name, and department name.
+
+SELECT DISTINCT EMP_NO, 
+	LAST_NAME, 
+	FIRST_NAME, 
+	DEPT_NAME
+FROM ALL_IN_ONE_TABLE 
 
 -- List first name, last name, and sex for employees whose first name is "Hercules" and last names begin with "B."
-SELECT first_name, last_name, sex FROM all_in_one_table
-WHERE first_name='Hercules' AND last_name Like'A%'
+SELECT FIRST_NAME, 
+	LAST_NAME, 
+	SEX
+FROM ALL_IN_ONE_TABLE 
+WHERE FIRST_NAME = 'Hercules'
+	AND LAST_NAME Like 'A%' -- List all employees in the Sales department, including their employee number, last name, first name, and department name.
 
--- List all employees in the Sales department, including their employee number, last name, first name, and department name.
-SELECT emp_no, last_name, first_name, dept_name FROM all_in_one_table
-WHERE dept_name LIKE 'Sales'
+	SELECT EMP_NO, 
+		LAST_NAME, 
+		FIRST_NAME, 
+		DEPT_NAME
+	FROM ALL_IN_ONE_TABLE WHERE DEPT_NAME LIKE 'Sales'
 
 -- List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
-SELECT DISTINCT emp_no, last_name, first_name, dept_name FROM all_in_one_table
-WHERE dept_name IN ('Sales' ,'Development')
+SELECT DISTINCT EMP_NO,
+	LAST_NAME,
+	FIRST_NAME,
+	DEPT_NAME
+FROM ALL_IN_ONE_TABLE
+WHERE DEPT_NAME IN ('Sales', 'Development')
 
 -- In descending order, list the frequency count of employee last names, i.e., how many employees share each last name.
-SELECT last_name, count(last_name) as count FROM all_in_one_table
-GROUP BY last_name ORDER BY count DESC
+SELECT LAST_NAME,
+	COUNT(LAST_NAME) AS COUNT
+FROM ALL_IN_ONE_TABLE
+GROUP BY LAST_NAME
+ORDER BY COUNT DESC
 
