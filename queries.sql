@@ -21,6 +21,7 @@ CREATE VIEW ALL_IN_ONE_TABLE AS
 -- Convert VIEW to a TABLE
 CREATE TABLE merged_data AS SELECT * FROM ALL_IN_ONE_TABLE;
 
+
 -- List the following details of each employee: employee number, last name, first name, sex, and salary.
 SELECT EMP_NO,
 	LAST_NAME,
